@@ -257,14 +257,14 @@ wheels = [
 
 [[package]]
 name = "braintree"
-version = "4.31.0"
+version = "4.40.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests", marker = "platform_python_implementation != 'PyPy'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c4/0b/aa7b9074d0758165953ef6c62a96aacec888fd57138e0eb3f25be9515e67/braintree-4.31.0.tar.gz", hash = "sha256:de383469ae0f824efba7e2d726c13927090d6a9305e1c49de1cb258b2868d43d", size = 103599, upload-time = "2024-10-29T17:31:57.906Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/d1/de8fd1f488105d83f7e2e2ee3fd6146576ca8507f1670e0445045d61da48/braintree-4.40.0.tar.gz", hash = "sha256:792e00fd87d3500e17c1ceb081e862655da29af671abab6d6aaafad43da4545e", size = 106704, upload-time = "2025-10-23T16:02:06.216Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/26/88/9397720744fc5f795eebbdbd3dd25daa394c31423929026626d22f85fb2d/braintree-4.31.0-py2.py3-none-any.whl", hash = "sha256:426011f92418703809007f387c3ce13b03535ad6f67244171ff2b417369e3693", size = 149758, upload-time = "2024-10-29T17:31:56.269Z" },
+    { url = "https://files.pythonhosted.org/packages/65/60/830cb7f6693f855cf7d1d10cf5903c0c5a81e6f2379b16b4b5536ba375e9/braintree-4.40.0-py2.py3-none-any.whl", hash = "sha256:b37b83a9f487beb15e5372938a34c505e993eabc12820cc0b7aadf4c63ba3870", size = 168228, upload-time = "2025-10-23T16:02:04.727Z" },
 ]
 
 [[package]]
@@ -2648,7 +2648,7 @@ requires-dist = [
     { name = "babel", specifier = ">=2.8,<2.18" },
     { name = "boto3", specifier = "~=1.28" },
     { name = "botocore", specifier = "~=1.37" },
-    { name = "braintree", specifier = ">=4.2,<4.32" },
+    { name = "braintree", specifier = ">=4.2,<4.41" },
     { name = "celery", extras = ["redis", "sqs"], specifier = ">=4.4.5,<6.0.0" },
     { name = "cryptography", specifier = ">=44.0.2,<45" },
     { name = "dj-database-url", specifier = ">=2,<3" },
