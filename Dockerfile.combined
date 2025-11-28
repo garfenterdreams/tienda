@@ -98,8 +98,8 @@ WORKDIR /app
 # Remove dashboard source (we only need the built assets)
 RUN rm -rf /app/dashboard
 
-# Copy Dashboard built assets
-COPY --from=build-dashboard /dashboard/build/ /app/dashboard/
+# Copy Dashboard built assets (vite outputs to build/dashboard/ due to APP_MOUNT_URI)
+COPY --from=build-dashboard /dashboard/build/dashboard/ /app/dashboard/
 
 # Collect static files
 ARG STATIC_URL
