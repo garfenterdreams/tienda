@@ -121,6 +121,8 @@ RUN mkdir -p /var/lib/nginx/body /var/lib/nginx/fastcgi /var/lib/nginx/proxy /va
 
 EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
+# Required for production mode (DEBUG=False)
+ENV ALLOWED_CLIENT_HOSTS=tienda.garfenter.com,localhost
 
 LABEL org.opencontainers.image.title="garfenter/tienda" \
   org.opencontainers.image.description="Garfenter Tienda - Saleor E-commerce with Dashboard" \
