@@ -123,6 +123,12 @@ EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
 # Required for production mode (DEBUG=False)
 ENV ALLOWED_CLIENT_HOSTS=tienda.garfenter.com,localhost
+# Generate RSA key for JWT tokens (required when DEBUG=False)
+RUN openssl genrsa -out /app/jwt_rsa_key.pem 2048 && chmod 600 /app/jwt_rsa_key.pem && chown saleor:saleor /app/jwt_rsa_key.pem
+
+# Copy and setup entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
 
 LABEL org.opencontainers.image.title="garfenter/tienda" \
   org.opencontainers.image.description="Garfenter Tienda - Saleor E-commerce with Dashboard" \
@@ -131,4 +137,5 @@ LABEL org.opencontainers.image.title="garfenter/tienda" \
   org.opencontainers.image.licenses="BSD-3-Clause"
 
 # Start supervisord which manages nginx and uvicorn
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
