@@ -122,6 +122,9 @@ RUN mkdir -p /var/lib/nginx/body /var/lib/nginx/fastcgi /var/lib/nginx/proxy /va
 EXPOSE 8000
 ENV PYTHONUNBUFFERED=1
 # Required for production mode (DEBUG=False)
+# ALLOWED_HOSTS for Django HTTP requests
+ENV ALLOWED_HOSTS=tienda.garfenter.com,localhost
+# ALLOWED_CLIENT_HOSTS for Saleor websocket connections
 ENV ALLOWED_CLIENT_HOSTS=tienda.garfenter.com,localhost
 # Generate RSA key for JWT tokens (required when DEBUG=False)
 RUN openssl genrsa -out /app/jwt_rsa_key.pem 2048 && chmod 600 /app/jwt_rsa_key.pem && chown saleor:saleor /app/jwt_rsa_key.pem
