@@ -1,5 +1,6 @@
 # Garfenter Cloud - Deploy tienda to ECR
-name: Deploy Saleor E-commerce to ECR
+# Builds combined API + Dashboard image and pushes to ECR
+name: Deploy Tienda to ECR
 
 on:
   push:
@@ -51,17 +52,27 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile.combined
           push: true
           tags: |
             ${{ steps.tags.outputs.full_image }}
             ${{ steps.tags.outputs.latest_image }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            STATIC_URL=/static/
 
       - name: Output image details
         run: |
-          echo "### Saleor E-commerce deployed to ECR" >> $GITHUB_STEP_SUMMARY
+          echo "### Tienda (Saleor + Dashboard) deployed to ECR" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Tag:** ${{ steps.tags.outputs.image_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "**Image:** ${{ steps.tags.outputs.full_image }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "This image includes:" >> $GITHUB_STEP_SUMMARY
+          echo "- Saleor API (GraphQL backend)" >> $GITHUB_STEP_SUMMARY
+          echo "- Saleor Dashboard (Admin UI)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Access points:" >> $GITHUB_STEP_SUMMARY
+          echo "- Dashboard: http://tienda.garfenter.com/" >> $GITHUB_STEP_SUMMARY
+          echo "- GraphQL: http://tienda.garfenter.com/graphql/" >> $GITHUB_STEP_SUMMARY

@@ -1,6 +1,35 @@
-.*
+# Git and IDE
+.git
+.gitignore
+.vscode
+.devcontainer
+
+# Don't exclude .github as it might be needed for some builds
+# But exclude workflow files
+.github/workflows
+
+# Python
 **/*.pyc
+**/__pycache__
 *.sqlite
+.pytest_cache
+
+# Media and generated
 media
-node_modules
 static
+
+# Dashboard node_modules (will be built in container)
+dashboard/node_modules
+dashboard/.pnpm-store
+dashboard/build
+
+# Documentation
+*.md
+!dashboard/README.md
+docs
+
+# Test files
+tests
+playwright
+*.test.ts
+*.spec.ts
