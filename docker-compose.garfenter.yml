@@ -78,6 +78,18 @@ services:
       - JWT_TTL_ACCESS=5m
       - JWT_TTL_APP_ACCESS=5m
       - JWT_TTL_REFRESH=30d
+      # Keycloak SSO Configuration
+      - OPENID_CONNECT_ENABLE=True
+      - OPENID_CONNECT_CLIENT_ID=product-tienda
+      - OPENID_CONNECT_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET:-plmf07z5UjUicajh0MPlJ9R0e7uLGUMM}
+      - OPENID_CONNECT_OAUTH_AUTHORIZATION_URL=https://sso.garfenter.com/realms/garfenter/protocol/openid-connect/auth
+      - OPENID_CONNECT_OAUTH_TOKEN_URL=https://sso.garfenter.com/realms/garfenter/protocol/openid-connect/token
+      - OPENID_CONNECT_JSON_WEB_KEY_SET_URL=https://sso.garfenter.com/realms/garfenter/protocol/openid-connect/certs
+      - OPENID_CONNECT_OAUTH_LOGOUT_URL=https://sso.garfenter.com/realms/garfenter/protocol/openid-connect/logout
+      - OPENID_CONNECT_USER_INFO_URL=https://sso.garfenter.com/realms/garfenter/protocol/openid-connect/userinfo
+      - OPENID_CONNECT_AUDIENCE=product-tienda
+      - OPENID_CONNECT_USE_OAUTH_SCOPE_PERMISSIONS=false
+      - OPENID_CONNECT_ENABLE_REFRESH_TOKEN=true
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
       interval: 30s
