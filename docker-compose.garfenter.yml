@@ -90,6 +90,8 @@ services:
       - OPENID_CONNECT_AUDIENCE=product-tienda
       - OPENID_CONNECT_USE_OAUTH_SCOPE_PERMISSIONS=false
       - OPENID_CONNECT_ENABLE_REFRESH_TOKEN=true
+      # SSO-only mode: blocks password login, forces SSO
+      - SSO_ONLY_ENABLED=${SSO_ONLY_ENABLED:-true}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
       interval: 30s
