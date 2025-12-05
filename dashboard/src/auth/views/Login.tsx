@@ -104,10 +104,20 @@ const LoginView = ({ params }: LoginViewProps) => {
       return;
     }
 
+    // Check URL directly for callback parameters (more reliable than props)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlHasCode = urlParams.has('code');
+    const urlHasState = urlParams.has('state');
+    const urlIsCallback = window.location.pathname.includes('/login/callback');
+    const isInCallbackFlowByUrl = urlHasCode && urlHasState && urlIsCallback;
+
+    // Also check props for callback flow
     const { code, state } = params;
-    const isInCallbackFlow = code && state && isCallbackPath;
+    const isInCallbackFlow = (code && state && isCallbackPath) || isInCallbackFlowByUrl;
+
     const externalAuths = externalAuthentications?.shop?.availableExternalAuthentications;
     const hasExternalAuth = externalAuths && externalAuths.length > 0;
+    const hasAuthErrors = errors && errors.length > 0;
 
     // Don't auto-redirect if:
     // - Already in callback flow (returning from SSO)
@@ -115,12 +125,14 @@ const LoginView = ({ params }: LoginViewProps) => {
     // - No external auth available
     // - Already attempted auto-redirect
     // - Currently authenticating
+    // - There are auth errors (e.g., "no permission" after SSO login)
     if (
       isInCallbackFlow ||
       externalAuthenticationsLoading ||
       !hasExternalAuth ||
       autoRedirectAttempted.current ||
-      authenticating
+      authenticating ||
+      hasAuthErrors
     ) {
       return;
     }
@@ -134,6 +146,7 @@ const LoginView = ({ params }: LoginViewProps) => {
     isCallbackPath,
     params,
     authenticating,
+    errors,
   ]);
 
   return (
