@@ -1,4 +1,34 @@
-# Saleor Dashboard
+# Saleor Dashboard (Garfenter Tienda Frontend)
+
+## Garfenter Context
+
+This Dashboard is part of **Garfenter Tienda** and is built together with the Saleor API into a combined Docker image.
+
+| Attribute | Value |
+|-----------|-------|
+| Domain | `tienda.garfenter.com` |
+| Parent Repo | `/Users/garfenter/development/products/ecommerce/saleor/` |
+| Combined Dockerfile | `../Dockerfile.combined` |
+| Served at | `/dashboard/` path via nginx |
+
+## SSO Auto-Redirect (TODO)
+
+The Dashboard should auto-redirect unauthenticated users to Keycloak SSO.
+
+**Key file:** `src/auth/views/Login.tsx`
+
+Current behavior:
+- Fetches `availableExternalAuthentications` from API
+- Shows SSO button if external auth available
+- User must click button to redirect
+
+Required behavior:
+- If only SSO is available (no password login), auto-redirect to Keycloak
+- Add `useEffect` to trigger `handleRequestExternalAuthentication` automatically
+
+See `../SSO_IMPLEMENTATION.md` for full details.
+
+---
 
 ## Project Overview
 
