@@ -1,7 +1,7 @@
 import { useAvailableExternalAuthenticationsLazyQuery } from "@dashboard/graphql";
 import useNavigator from "@dashboard/hooks/useNavigator";
 import { getAppMountUriForRedirect } from "@dashboard/utils/urls";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import urlJoin from "url-join";
 import useRouter from "use-react-router";
 
@@ -11,6 +11,9 @@ import { LoginFormData } from "../components/LoginPage/types";
 import { useAuthParameters } from "../hooks/useAuthParameters";
 import { useLastLoginMethod } from "../hooks/useLastLoginMethod";
 import { loginCallbackPath, LoginUrlQueryParams } from "../urls";
+
+// Check if SSO-only mode is enabled (auto-redirect to SSO provider)
+const SSO_ONLY_MODE = true;
 
 interface LoginViewProps {
   params: LoginUrlQueryParams;
@@ -33,6 +36,7 @@ const LoginView = ({ params }: LoginViewProps) => {
     setRequestedExternalPluginId,
   } = useAuthParameters();
   const { lastLoginMethod, setLastLoginMethod } = useLastLoginMethod();
+  const autoRedirectAttempted = useRef(false);
 
   const handleSubmit = async (data: LoginFormData) => {
     if (!login) {
@@ -93,6 +97,44 @@ const LoginView = ({ params }: LoginViewProps) => {
       setFallbackUri(null);
     };
   }, []);
+
+  // Auto-redirect to SSO provider when SSO-only mode is enabled
+  useEffect(() => {
+    if (!SSO_ONLY_MODE) {
+      return;
+    }
+
+    const { code, state } = params;
+    const isInCallbackFlow = code && state && isCallbackPath;
+    const externalAuths = externalAuthentications?.shop?.availableExternalAuthentications;
+    const hasExternalAuth = externalAuths && externalAuths.length > 0;
+
+    // Don't auto-redirect if:
+    // - Already in callback flow (returning from SSO)
+    // - Still loading external authentications
+    // - No external auth available
+    // - Already attempted auto-redirect
+    // - Currently authenticating
+    if (
+      isInCallbackFlow ||
+      externalAuthenticationsLoading ||
+      !hasExternalAuth ||
+      autoRedirectAttempted.current ||
+      authenticating
+    ) {
+      return;
+    }
+
+    // Mark as attempted and trigger redirect to first available SSO provider
+    autoRedirectAttempted.current = true;
+    handleRequestExternalAuthentication(externalAuths[0].id);
+  }, [
+    externalAuthentications,
+    externalAuthenticationsLoading,
+    isCallbackPath,
+    params,
+    authenticating,
+  ]);
 
   return (
     <LoginPage
