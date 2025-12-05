@@ -1,3 +1,5 @@
+import os
+
 import graphene
 from django.core.exceptions import ValidationError
 
@@ -11,6 +13,11 @@ from ....core.types import AccountError
 from ....site.dataloaders import get_site_promise
 from ...types import User
 from .utils import _get_new_csrf_token, update_user_last_login_if_required
+
+
+def is_sso_only_enabled() -> bool:
+    """Check if SSO-only mode is enabled via environment variable."""
+    return os.environ.get("SSO_ONLY_ENABLED", "").lower() in ("true", "1", "yes")
 
 
 class CreateToken(BaseMutation):
@@ -85,6 +92,17 @@ class CreateToken(BaseMutation):
     def perform_mutation(  # type: ignore[override]
         cls, _root, info: ResolveInfo, /, *, audience=None, email, password
     ):
+        # Block password-based authentication when SSO-only mode is enabled
+        if is_sso_only_enabled():
+            raise ValidationError(
+                {
+                    "email": ValidationError(
+                        "Password authentication is disabled. Please use SSO to login.",
+                        code=AccountErrorCode.INVALID_CREDENTIALS.value,
+                    )
+                }
+            )
+
         additional_paylod = {}
 
         csrf_token = _get_new_csrf_token()
